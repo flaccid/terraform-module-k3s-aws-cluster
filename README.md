@@ -15,12 +15,12 @@ TODO: add in all the inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| `agent_nlb_internal` | If the provisioned NLB for agents should be internal | `bool` | `false` | no |
+| `agent_nlb_internal` | If the provisioned NLB for agents should be internal | `bool` | `true` | no |
 | `create_nlb` | Create an NLB for ingress needs | `bool` | `false` | no |
 | `database_name` | Name of database to create for k3s | `string` | `aws-k3s-demo` | no |
 | `install_k3s_version` |	Version of K3S to install	string | `string` | `"1.16.15"` | no |
 | `resource_prefix` | Name prefix to use for AWS resources | `string` | `k3s` | no |
-| `server_nlb_internal` | If the provisioned NLB for servers should be internal | `bool` | `false` | no |
+| `server_nlb_internal` | If the provisioned NLB for servers should be internal | `bool` | `true` | no |
 | `ssh_keys` | SSH public keys to inject into instances | `list` | `[]` | no |
 
 ### Outputs
