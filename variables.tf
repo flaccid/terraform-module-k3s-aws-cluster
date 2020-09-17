@@ -120,7 +120,7 @@ variable "db_instance_type" {
 variable "database_name" {
   default     = "aws-k3s-demo"
   type        = string
-  description = "Name of database to create in RDS"
+  description = "Name of database to create for k3s"
 }
 
 variable "rds_master_username" {
@@ -194,4 +194,10 @@ variable "k3s_tls_san" {
   default     = null
   type        = string
   description = "Sets k3s tls-san flag to this value instead of the default load balancer"
+}
+
+variable "output_kubeconfig" {
+  default     = false
+  type        = bool
+  description = "Whether to provide the kubeconfig as a terraform output"
 }
