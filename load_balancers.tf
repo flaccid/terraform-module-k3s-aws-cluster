@@ -1,6 +1,7 @@
 resource "random_pet" "lb" {}
 
 resource "aws_lb" "k3s-server" {
+  count              = local.create_nlb
   name               = join("-", [local.resource_prefix, "servers", random_pet.lb.id])
   internal           = local.server_nlb_internal
   load_balancer_type = "network"
@@ -8,6 +9,7 @@ resource "aws_lb" "k3s-server" {
 }
 
 resource "aws_lb_listener" "server-port_6443" {
+  count             = local.create_nlb
   load_balancer_arn = aws_lb.k3s-server.arn
   port              = "6443"
   protocol          = "TCP"
@@ -19,6 +21,7 @@ resource "aws_lb_listener" "server-port_6443" {
 }
 
 resource "aws_lb_target_group" "server-6443" {
+  count    = local.create_nlb
   name     = join("-", [local.name, "6443", random_pet.lb.id])
   port     = 6443
   protocol = "TCP"
