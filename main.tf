@@ -16,7 +16,7 @@ locals {
   k3s_storage_cafile  = var.k3s_storage_cafile
   # TODO: how to prevent using " " ?
   k3s_storage_endpoint        = var.k3s_storage_endpoint == "sqlite" ? " " : "postgres://${local.rds_master_username}:${local.rds_master_password}@${aws_rds_cluster.k3s.0.endpoint}/${local.database_name}"
-  k3s_tls_san                 = var.k3s_tls_san != null ? var.k3s_tls_san : "--tls-san ${aws_lb.k3s-server.dns_name}"
+  k3s_tls_san                 = var.k3s_tls_san != null ? var.k3s_tls_san : "--tls-san fixme"
   name                        = var.name
   output_kubeconfig           = var.output_kubeconfig
   private_subnets_cidr_blocks = var.private_subnets_cidr_blocks

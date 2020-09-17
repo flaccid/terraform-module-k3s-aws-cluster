@@ -1,7 +1,7 @@
 resource "random_pet" "lb" {}
 
 resource "aws_lb" "k3s-server" {
-  count              = local.create_nlb
+  #for_each           = toset(local.create_nlb)
   name               = join("-", [local.resource_prefix, "servers", random_pet.lb.id])
   internal           = local.server_nlb_internal
   load_balancer_type = "network"
@@ -16,7 +16,7 @@ resource "aws_lb_listener" "server-port_6443" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.server-6443.arn
+    target_group_arn = aws_lb_target_group.server-6443[0].arn
   }
 }
 
