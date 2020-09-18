@@ -85,9 +85,9 @@ variable "private_subnet_ids" {
 }
 
 variable "install_k3s_version" {
-  default     = "1.16.15"
+  default     = "1.18.9+k3s1"
   type        = string
-  description = "Version of K3S to install"
+  description = "Version of K3S to install, matching the release tag"
 }
 
 variable "extra_master_security_groups" {
