@@ -20,9 +20,9 @@ locals {
   output_kubeconfig           = var.output_kubeconfig
   private_subnets_cidr_blocks = var.private_subnets_cidr_blocks
   private_subnet_ids          = length(var.private_subnet_ids) > 0 ? var.private_subnet_ids : data.aws_subnet_ids.available.ids
-  rds_private_subnet_ids      = slice(local.private_subnet_ids, 1, 4) # This is because rds can *only* handle up to 3 subnets, whereas private_subnets may be more than that
   public_subnets_cidr_blocks  = var.public_subnets_cidr_blocks
   public_subnet_ids           = length(var.public_subnet_ids) > 0 ? var.public_subnet_ids : data.aws_subnet_ids.available.ids
+  rds_private_subnet_ids      = length(var.rds_private_subnet_ids) > 0 ? var.rds_private_subnet_ids : local.private_subnet_ids
   rds_master_username         = length(var.rds_master_username) > 0 ? var.rds_master_username : var.name
   rds_master_password         = length(var.rds_master_password) > 0 ? var.rds_master_password : random_password.rds_master_password.result
   resource_prefix             = var.resource_prefix

@@ -1,21 +1,21 @@
 resource "aws_security_group" "self" {
-  name   = "${local.name}-self"
+  name   = "${local.resource_prefix}-${local.name}-self"
   vpc_id = data.aws_vpc.default.id
 }
 
 resource "aws_security_group" "ingress" {
-  name   = "${local.name}-ingress"
+  name   = "${local.resource_prefix}-${local.name}-ingress"
   vpc_id = data.aws_vpc.default.id
 }
 
 resource "aws_security_group" "egress" {
-  name   = "${local.name}-egress"
+  name   = "${local.resource_prefix}-${local.name}-egress"
   vpc_id = data.aws_vpc.default.id
 
 }
 # TODO: would not be needed it local sqlite default
 resource "aws_security_group" "database" {
-  name = "${local.name}-database"
+  name = "${local.resource_prefix}-${local.name}-database"
   # TODO: is this only with default vpc??
   vpc_id = data.aws_vpc.default.id
 }

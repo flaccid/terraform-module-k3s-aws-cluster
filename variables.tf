@@ -118,6 +118,11 @@ variable "database_name" {
   description = "Name of database to create for k3s"
 }
 
+variable "rds_private_subnet_ids" {
+  type        = list
+  description = "RDS Private Subnet ids"
+  default     = []
+}
 variable "rds_master_username" {
   type        = string
   description = "Master username for RDS database"

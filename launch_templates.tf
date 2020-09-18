@@ -1,5 +1,5 @@
 resource "aws_launch_template" "k3s_master" {
-  name_prefix   = "${local.name}-master"
+  name_prefix   = "${local.resource_prefix}-${local.name}-master"
   image_id      = local.master_ami_id
   instance_type = local.master_instance_type
   user_data     = data.template_cloudinit_config.k3s_master.rendered
@@ -20,20 +20,20 @@ resource "aws_launch_template" "k3s_master" {
   }
 
   tags = {
-    Name = "${local.name}-master"
+    Name = "${local.resource_prefix}-${local.name}-master"
   }
 
   tag_specifications {
     resource_type = "instance"
 
     tags = {
-      Name = "${local.name}-master"
+      Name = "${local.resource_prefix}-${local.name}-master"
     }
   }
 }
 
 resource "aws_launch_template" "k3s_worker" {
-  name_prefix   = "${local.name}-worker"
+  name_prefix   = "${local.resource_prefix}-${local.name}-worker"
   image_id      = local.worker_ami_id
   instance_type = local.worker_instance_type
   user_data     = data.template_cloudinit_config.k3s_worker.rendered
@@ -54,14 +54,14 @@ resource "aws_launch_template" "k3s_worker" {
   }
 
   tags = {
-    Name = "${local.name}-worker"
+    Name = "${local.resource_prefix}-${local.name}-worker"
   }
 
   tag_specifications {
     resource_type = "instance"
 
     tags = {
-      Name = "${local.name}-worker"
+      Name = "${local.resource_prefix}-${local.name}-worker"
     }
   }
 }
