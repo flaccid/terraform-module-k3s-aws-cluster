@@ -1,5 +1,5 @@
 resource "aws_autoscaling_group" "k3s_master" {
-  name_prefix         = "${local.name}-master"
+  name_prefix         = "${local.resource_prefix}-${local.name}-master"
   desired_capacity    = local.master_node_count
   max_size            = local.master_node_count
   min_size            = local.master_node_count
@@ -19,7 +19,7 @@ resource "aws_autoscaling_group" "k3s_master" {
 }
 
 resource "aws_autoscaling_group" "k3s_worker" {
-  name_prefix         = "${local.name}-worker"
+  name_prefix         = "${local.resource_prefix}-${local.name}-worker"
   desired_capacity    = local.worker_node_count
   max_size            = local.worker_node_count
   min_size            = local.worker_node_count

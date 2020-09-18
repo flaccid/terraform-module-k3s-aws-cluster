@@ -1,12 +1,12 @@
 resource "aws_db_subnet_group" "private" {
   count       = local.deploy_rds
-  name_prefix = "${local.name}-private"
+  name_prefix = "${local.resource_prefix}-${local.name}-private"
   subnet_ids  = local.rds_private_subnet_ids
 }
 
 resource "aws_rds_cluster_parameter_group" "k3s" {
   count       = local.deploy_rds
-  name_prefix = "${local.name}-"
+  name_prefix = "${local.resource_prefix}-${local.name}-"
   description = "Force SSL for aurora-postgresql10.7"
   family      = "aurora-postgresql10"
 
@@ -19,7 +19,7 @@ resource "aws_rds_cluster_parameter_group" "k3s" {
 
 resource "aws_rds_cluster" "k3s" {
   count                           = local.use_rds
-  cluster_identifier_prefix       = "${local.name}-"
+  cluster_identifier_prefix       = "${local.resource_prefix}-${local.name}-"
   engine                          = "aurora-postgresql"
   engine_mode                     = "provisioned"
   engine_version                  = "10.7"
@@ -38,12 +38,12 @@ resource "aws_rds_cluster" "k3s" {
   copy_tags_to_snapshot     = true
   deletion_protection       = false
   skip_final_snapshot       = local.skip_final_snapshot
-  final_snapshot_identifier = local.skip_final_snapshot ? null : "${local.name}-final-snapshot"
+  final_snapshot_identifier = local.skip_final_snapshot ? null : "${local.resource_prefix}-${local.name}-final-snapshot"
 }
 
 resource "aws_rds_cluster_instance" "k3s" {
   count                = local.database_node_count
-  identifier_prefix    = "${local.name}-${count.index}"
+  identifier_prefix    = "${local.resource_prefix}-${local.name}-${count.index}"
   cluster_identifier   = aws_rds_cluster.k3s.0.id
   engine               = "aurora-postgresql"
   instance_class       = local.db_instance_type
