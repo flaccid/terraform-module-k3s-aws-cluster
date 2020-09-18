@@ -29,7 +29,7 @@ resource "aws_security_group_rule" "egress_all" {
   security_group_id = aws_security_group.egress.id
 }
 
-resource "aws_security_group_rule" "self_k3s_server" {
+resource "aws_security_group_rule" "self_k3s_master" {
   type      = "ingress"
   from_port = 6443
   to_port   = 6443
