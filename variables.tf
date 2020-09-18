@@ -10,16 +10,16 @@ variable "resource_prefix" {
   description = "The prefix to use for AWS resources"
 }
 
-variable "agent_ami_id" {
+variable "worker_ami_id" {
   type        = string
   default     = null
-  description = "AMI to use for k3s agent instances"
+  description = "AMI to use for k3s worker instances"
 }
 
-variable "server_ami_id" {
+variable "master_ami_id" {
   type        = string
   default     = null
-  description = "AMI to use for k3s server instances"
+  description = "AMI to use for k3s master instances"
 }
 
 variable "r53_zone_id" {
@@ -28,41 +28,36 @@ variable "r53_zone_id" {
   description = "Route 53 Zone ID"
 }
 
-variable "server_instance_type" {
+variable "master_instance_type" {
   type    = string
   default = "m5.large"
 }
 
-variable "agent_instance_type" {
+variable "worker_instance_type" {
   type    = string
   default = "m5.large"
 }
 
-variable "create_nlb" {
-  type    = bool
-  default = false
-}
-
-variable "server_nlb_internal" {
+variable "master_nlb_internal" {
   type    = bool
   default = true
 }
 
-variable "agent_nlb_internal" {
+variable "worker_nlb_internal" {
   type    = bool
   default = true
 }
 
-variable "server_node_count" {
+variable "master_node_count" {
   type        = number
   default     = 1
-  description = "Number of server nodes to launch"
+  description = "Number of master nodes to launch"
 }
 
-variable "agent_node_count" {
+variable "worker_node_count" {
   type        = number
   default     = 1
-  description = "Number of agent nodes to launch"
+  description = "Number of worker nodes to launch"
 }
 
 variable "database_node_count" {
@@ -95,16 +90,16 @@ variable "install_k3s_version" {
   description = "Version of K3S to install"
 }
 
-variable "extra_server_security_groups" {
+variable "extra_master_security_groups" {
   default     = []
   type        = list
-  description = "Additional security groups to attach to k3s server instances"
+  description = "Additional security groups to attach to k3s master instances"
 }
 
-variable "extra_agent_security_groups" {
+variable "extra_worker_security_groups" {
   default     = []
   type        = list
-  description = "Additional security groups to attach to k3s agent instances"
+  description = "Additional security groups to attach to k3s worker instances"
 }
 
 variable "aws_azs" {
@@ -159,10 +154,10 @@ variable "k3s_storage_endpoint" {
   description = "Storage Backend for K3S cluster to use. Valid options are 'sqlite' or 'postgres'"
 }
 
-variable "k3s_disable_agent" {
+variable "k3s_disable_worker" {
   default     = false
   type        = bool
-  description = "Whether to run the k3s agent on the same host as the k3s server"
+  description = "Whether to run the k3s worker on the same host as the k3s master"
 }
 
 variable "ssh_keys" {

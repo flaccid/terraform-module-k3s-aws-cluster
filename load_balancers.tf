@@ -1,39 +1,34 @@
-resource "random_pet" "lb" {}
-
-resource "aws_lb" "k3s-server" {
-  #for_each           = toset(local.create_nlb)
-  name               = join("-", [local.resource_prefix, "servers", random_pet.lb.id])
-  internal           = local.server_nlb_internal
+resource "aws_lb" "k3s-master" {
+  name               = join("-", [local.resource_prefix, "masters"])
+  internal           = local.master_nlb_internal
   load_balancer_type = "network"
-  subnets            = local.private_subnet_ids
+  subnets            = local.master_nlb_internal ? local.private_subnet_ids : local.public_subnet_ids
 }
 
-resource "aws_lb_listener" "server-port_6443" {
-  count             = local.create_nlb
-  load_balancer_arn = aws_lb.k3s-server.arn
-  port              = "6443"
-  protocol          = "TCP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.server-6443[0].arn
-  }
-}
-
-resource "aws_lb_target_group" "server-6443" {
-  count    = local.create_nlb
-  name     = join("-", [local.name, "6443", random_pet.lb.id])
+resource "aws_lb_target_group" "master-6443" {
+  name     = join("-", [local.name, "6443"])
   port     = 6443
   protocol = "TCP"
   vpc_id   = data.aws_vpc.default.id
 }
 
-resource "aws_lb" "k3s-agent" {
-  count              = local.create_nlb
-  name               = join("-", [local.resource_prefix, "agents", random_pet.lb.id])
-  internal           = local.agent_nlb_internal
+resource "aws_lb_listener" "master-port_6443" {
+  load_balancer_arn = aws_lb.k3s-master.arn
+  port              = "6443"
+  protocol          = "TCP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.master-6443.arn
+  }
+}
+
+
+resource "aws_lb" "k3s-worker" {
+  name               = join("-", [local.resource_prefix, "workers"])
+  internal           = local.worker_nlb_internal
   load_balancer_type = "network"
-  subnets            = local.public_subnet_ids
+  subnets            = local.worker_nlb_internal ? local.private_subnet_ids : local.public_subnet_ids
 
   tags = {
     "kubernetes.io/cluster/${local.name}" = ""
@@ -41,32 +36,29 @@ resource "aws_lb" "k3s-agent" {
 }
 
 resource "aws_lb_listener" "port_443" {
-  count             = local.create_nlb
-  load_balancer_arn = aws_lb.k3s-agent.0.arn
+  load_balancer_arn = aws_lb.k3s-worker.arn
   port              = "443"
   protocol          = "TCP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.agent-443.0.arn
+    target_group_arn = aws_lb_target_group.worker-443.arn
   }
 }
 
 resource "aws_lb_listener" "port_80" {
-  count             = local.create_nlb
-  load_balancer_arn = aws_lb.k3s-agent.0.arn
+  load_balancer_arn = aws_lb.k3s-worker.arn
   port              = "80"
   protocol          = "TCP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.agent-80.0.arn
+    target_group_arn = aws_lb_target_group.worker-80.arn
   }
 }
 
-resource "aws_lb_target_group" "agent-443" {
-  count    = local.create_nlb
-  name     = substr("${local.name}-443-${random_pet.lb.id}", 0, 24)
+resource "aws_lb_target_group" "worker-443" {
+  name     = substr("${local.name}-443", 0, 24)
   port     = 443
   protocol = "TCP"
   vpc_id   = data.aws_vpc.default.id
@@ -87,9 +79,8 @@ resource "aws_lb_target_group" "agent-443" {
   }
 }
 
-resource "aws_lb_target_group" "agent-80" {
-  count    = local.create_nlb
-  name     = substr("${local.name}-80-${random_pet.lb.id}", 0, 24)
+resource "aws_lb_target_group" "worker-80" {
+  name     = substr("${local.name}-80", 0, 24)
   port     = 80
   protocol = "TCP"
   vpc_id   = data.aws_vpc.default.id

@@ -1,7 +1,7 @@
 resource "aws_db_subnet_group" "private" {
   count       = local.deploy_rds
   name_prefix = "${local.name}-private"
-  subnet_ids  = local.private_subnet_ids
+  subnet_ids  = local.rds_private_subnet_ids
 }
 
 resource "aws_rds_cluster_parameter_group" "k3s" {
