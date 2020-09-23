@@ -29,6 +29,16 @@ resource "aws_security_group_rule" "egress_all" {
   security_group_id = aws_security_group.egress.id
 }
 
+resource "aws_security_group_rule" "ingress_all" {
+  count             = local.ingress_all
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.ingress.id
+}
+
 resource "aws_security_group_rule" "self_k3s_master" {
   type      = "ingress"
   from_port = 6443

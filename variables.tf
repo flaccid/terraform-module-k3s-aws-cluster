@@ -201,3 +201,9 @@ variable "output_kubeconfig" {
   type        = bool
   description = "Whether to provide the kubeconfig as a terraform output"
 }
+
+variable "ingress_all" {
+  default     = false
+  type        = bool
+  description = "Whether to open all IPs to the ingress security group"
+}

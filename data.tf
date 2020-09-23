@@ -64,11 +64,10 @@ data "template_cloudinit_config" "k3s_worker" {
   }
 }
 
-
-# data "external" "k3s_kubeconfig" {
-#   program = ["cat /etc/rancher/k3s/k3s.yaml"]
-#
-#   query = {
-#     controller = "${packet_device.controller.network.0.address}"
-#   }
-# }
+# problem: potential race condition
+data "aws_instances" "k3s-master-asg" {
+  instance_tags = {
+    Name = join("-", ["k3s", var.name, "master"])
+  }
+  depends_on = ["aws_autoscaling_group.k3s_master"]
+}

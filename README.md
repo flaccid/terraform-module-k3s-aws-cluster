@@ -16,6 +16,7 @@ TODO: add in all the inputs
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | `database_name` | Name of database to create for k3s | `string` | `aws-k3s-demo` | no |
+| `ingress_all` | Whether to open up ingress to all IPs on nodes | `string` | `false` | no |
 | `install_k3s_version` |	Version of K3S to install	string | `string` | `"1.18.9+k3s1"` | no |
 | `master_nlb_internal` | If the provisioned NLB for masters should be internal | `bool` | `true` | no |
 | `resource_prefix` | Name prefix to use for AWS resources | `string` | `k3s` | no |
