@@ -15,13 +15,12 @@ TODO: add in all the inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| `worker_nlb_internal` | If the provisioned NLB for workers should be internal | `bool` | `true` | no |
-| `create_nlb` | Create an NLB for ingress needs | `bool` | `false` | no |
 | `database_name` | Name of database to create for k3s | `string` | `aws-k3s-demo` | no |
 | `install_k3s_version` |	Version of K3S to install	string | `string` | `"1.18.9+k3s1"` | no |
-| `resource_prefix` | Name prefix to use for AWS resources | `string` | `k3s` | no |
 | `master_nlb_internal` | If the provisioned NLB for masters should be internal | `bool` | `true` | no |
+| `resource_prefix` | Name prefix to use for AWS resources | `string` | `k3s` | no |
 | `ssh_keys` | SSH public keys to inject into instances | `list` | `[]` | no |
+| `worker_nlb_internal` | If the provisioned NLB for workers should be internal | `bool` | `true` | no |
 
 ### Outputs
 
