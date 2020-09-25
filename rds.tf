@@ -7,7 +7,7 @@ resource "aws_db_subnet_group" "private" {
 resource "aws_rds_cluster_parameter_group" "k3s" {
   count       = local.deploy_rds
   name_prefix = "${local.resource_prefix}-${local.name}-"
-  description = "Force SSL for aurora-postgresql10.7"
+  description = "Force SSL for aurora-postgresql10.11"
   family      = "aurora-postgresql10"
 
   parameter {
@@ -22,7 +22,7 @@ resource "aws_rds_cluster" "k3s" {
   cluster_identifier_prefix       = "${local.resource_prefix}-${local.name}-"
   engine                          = "aurora-postgresql"
   engine_mode                     = "provisioned"
-  engine_version                  = "10.7"
+  engine_version                  = "10.11"
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.k3s.0.name
   availability_zones              = local.aws_azs
   database_name                   = local.database_name

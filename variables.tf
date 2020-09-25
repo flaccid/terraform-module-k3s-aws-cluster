@@ -177,7 +177,7 @@ variable "use_rds" {
   description = "Whether to use RDS or not"
 }
 
-variable "k3s_cluster_secret" {
+variable "k3s_token" {
   default     = null
   type        = string
   description = "Override to set k3s cluster registration secret"

@@ -11,8 +11,8 @@ resource "aws_security_group" "ingress" {
 resource "aws_security_group" "egress" {
   name   = "${local.resource_prefix}-${local.name}-egress"
   vpc_id = data.aws_vpc.default.id
-
 }
+
 # TODO: would not be needed it local sqlite default
 resource "aws_security_group" "database" {
   name = "${local.resource_prefix}-${local.name}-database"
@@ -44,8 +44,16 @@ resource "aws_security_group_rule" "self_k3s_master" {
   from_port = 6443
   to_port   = 6443
   protocol  = "TCP"
-  # TODO: fix
-  cidr_blocks = ["0.0.0.0/0"]
   #cidr_blocks       = local.private_subnets_cidr_blocks
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.self.id
+}
+
+resource "aws_security_group_rule" "ssh" {
+  type      = "ingress"
+  from_port = 22
+  to_port   = 22
+  protocol  = "TCP"
+  cidr_blocks       = local.private_subnets_cidr_blocks
   security_group_id = aws_security_group.self.id
 }

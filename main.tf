@@ -1,22 +1,24 @@
 locals {
-  worker_ami_id        = var.worker_ami_id != null ? var.worker_ami_id : data.aws_ami.ubuntu.id
-  worker_instance_type = var.worker_instance_type
-  worker_k3s_exec      = ""
-  worker_nlb_internal  = var.worker_nlb_internal
-  worker_node_count    = var.worker_node_count
-  aws_azs              = var.aws_azs
-  database_name        = var.database_name
-  database_node_count  = var.k3s_storage_endpoint != "sqlite" ? var.database_node_count : 0
-  db_instance_type     = var.db_instance_type
-  deploy_rds           = var.k3s_storage_endpoint != "sqlite" ? 1 : 0
-  install_k3s_version  = var.install_k3s_version
-  ingress_all          = "${var.ingress_all ? 1 : 0}"
-  k3s_cluster_secret   = var.k3s_cluster_secret != null ? var.k3s_cluster_secret : random_password.k3s_cluster_secret.result
-  k3s_disable_worker   = var.k3s_disable_worker ? "--disable-worker" : " "
-  k3s_storage_cafile   = var.k3s_storage_cafile
+  worker_ami_id               = var.worker_ami_id != null ? var.worker_ami_id : data.aws_ami.ubuntu.id
+  worker_instance_type        = var.worker_instance_type
+  worker_k3s_exec             = ""
+  worker_nlb_internal         = var.worker_nlb_internal
+  worker_node_count           = var.worker_node_count
+  aws_azs                     = var.aws_azs
+  database_name               = var.database_name
+  database_node_count         = var.k3s_storage_endpoint != "sqlite" ? var.database_node_count : 0
+  db_instance_type            = var.db_instance_type
+  deploy_rds                  = var.k3s_storage_endpoint != "sqlite" ? 1 : 0
+  install_k3s_version         = var.install_k3s_version
+  ingress_all                 = "${var.ingress_all ? 1 : 0}"
+
+  k3s_token                   = var.k3s_token != null ? var.k3s_token : random_password.k3s_token.result
+  k3s_disable_worker          = var.k3s_disable_worker ? "--disable-worker" : " "
+  k3s_storage_cafile          = var.k3s_storage_cafile
+  k3s_storage_endpoint        = var.k3s_storage_endpoint == "sqlite" ? " " : "postgres://${local.rds_master_username}:${local.rds_master_password}@${aws_rds_cluster.k3s[0].endpoint}/${local.database_name}"
+  k3s_tls_san                 = var.k3s_tls_san != null ? var.k3s_tls_san : "--tls-san ${aws_lb.k3s-master.dns_name}"
+
   # TODO: how to prevent using " " ?
-  k3s_storage_endpoint        = var.k3s_storage_endpoint == "sqlite" ? " " : "postgres://${local.rds_master_username}:${local.rds_master_password}@something/${local.database_name}"
-  k3s_tls_san                 = var.k3s_tls_san != null ? var.k3s_tls_san : "--tls-san fixme"
   name                        = var.name
   output_kubeconfig           = var.output_kubeconfig
   private_subnets_cidr_blocks = var.private_subnets_cidr_blocks
@@ -36,3 +38,5 @@ locals {
   ssh_keys                    = var.ssh_keys
   use_rds                     = var.use_rds ? 1 : 0
 }
+
+

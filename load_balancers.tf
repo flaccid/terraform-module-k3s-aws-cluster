@@ -1,5 +1,5 @@
 resource "aws_lb" "k3s-master" {
-  name               = join("-", [local.resource_prefix, "masters"])
+  name               = "${local.resource_prefix}-${local.name}-master"
   internal           = local.master_nlb_internal
   load_balancer_type = "network"
   subnets            = local.master_nlb_internal ? local.private_subnet_ids : local.public_subnet_ids
@@ -25,7 +25,7 @@ resource "aws_lb_listener" "master-port_6443" {
 
 
 resource "aws_lb" "k3s-worker" {
-  name               = join("-", [local.resource_prefix, "workers"])
+  name               = "${local.resource_prefix}-${local.name}-worker"
   internal           = local.worker_nlb_internal
   load_balancer_type = "network"
   subnets            = local.worker_nlb_internal ? local.private_subnet_ids : local.public_subnet_ids
